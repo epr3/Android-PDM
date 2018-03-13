@@ -4,6 +4,11 @@ public class Punct {
     double longitude;
     double latitude;
 
+    public Punct(double longitude, double latitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
     public double getLongitude() {
         return longitude;
     }
