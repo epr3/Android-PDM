@@ -59,4 +59,8 @@ public class Traseu implements Serializable{
         this.distanta = distanta;
         this.listaPuncte = listaPuncte;
     }
+
+    public Traseu() {
+
+    }
 }

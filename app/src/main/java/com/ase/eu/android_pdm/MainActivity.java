@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         if (resultCode == RESULT_OK) {
             Traseu traseu = (Traseu) data.getSerializableExtra("traseu");
             traseuList.add(traseu);
-            mAdapter.notifyDataSetChanged();
+            mAdapter.notifyItemInserted(traseuList.size());
         }
     }
 }

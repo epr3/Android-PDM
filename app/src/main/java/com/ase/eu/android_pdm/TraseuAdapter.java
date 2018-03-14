@@ -40,7 +40,7 @@ class TraseuAdapter extends RecyclerView.Adapter<TraseuAdapter.ViewHolder> {
         holder.denumire.setText(traseu.getDenumire());
         holder.dataFinal.setText(traseu.getDataFinal().toString());
         holder.dataStart.setText(traseu.getDataStart().toString());
-        holder.distanta.setText(traseu.getDistanta().toString());
+        holder.distanta.setText(traseu.getListaPuncte().size() + " puncte");
     }
 
     @Override
