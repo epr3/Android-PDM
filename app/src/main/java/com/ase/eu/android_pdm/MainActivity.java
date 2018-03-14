@@ -19,9 +19,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public static ArrayList<Traseu> traseuList = new ArrayList<>();
+    private ArrayList<Traseu> traseuList = new ArrayList<>();
     private RecyclerView recyclerView;
-    public static TraseuAdapter mAdapter;
+    private TraseuAdapter mAdapter;
+    private static int ADD_TRASEU_REQUEST_CODE = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddTraseuActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, AddTraseuActivity.class);
+                startActivityForResult(intent, ADD_TRASEU_REQUEST_CODE);
             }
         });
 
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -78,7 +80,8 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_lista) {
             // Handle the camera acti
         } else if (id == R.id.nav_adaugare) {
-
+            Intent intent = new Intent(MainActivity.this, AddTraseuActivity.class);
+            startActivityForResult(intent, ADD_TRASEU_REQUEST_CODE);
         } else if (id == R.id.nav_setari) {
 
         } else if (id == R.id.nav_despre) {
@@ -88,5 +91,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Traseu traseu = (Traseu) data.getSerializableExtra("traseu");
+            traseuList.add(traseu);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }

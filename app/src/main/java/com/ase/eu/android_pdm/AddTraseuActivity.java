@@ -1,6 +1,7 @@
 package com.ase.eu.android_pdm;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -20,9 +21,6 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import static com.ase.eu.android_pdm.MainActivity.mAdapter;
-import static com.ase.eu.android_pdm.MainActivity.traseuList;
 
 public class AddTraseuActivity extends AppCompatActivity {
 
@@ -86,9 +84,13 @@ public class AddTraseuActivity extends AppCompatActivity {
                     traseu = new Traseu(denumireText, dataStart, new Date(), 0, null);
                     traseu.setListaPuncte(listaPuncte);
                     traseu.setDistanta(listaPuncte.size());
-                    traseuList.add(traseu);
                     stopLocationUpdate();
-                    mAdapter.notifyItemInserted(traseuList.size());
+
+                    Intent intent = new Intent();
+
+                    intent.putExtra("traseu", traseu);
+                    setResult(RESULT_OK, intent);
+
                     finish();
                 }
             }

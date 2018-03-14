@@ -1,9 +1,10 @@
 package com.ase.eu.android_pdm;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Traseu {
+public class Traseu implements Serializable{
 
     private String denumire;
     private Date dataStart;

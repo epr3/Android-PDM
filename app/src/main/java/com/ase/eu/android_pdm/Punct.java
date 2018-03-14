@@ -1,6 +1,8 @@
 package com.ase.eu.android_pdm;
 
-public class Punct {
+import java.io.Serializable;
+
+public class Punct implements Serializable{
     double longitude;
     double latitude;
 
