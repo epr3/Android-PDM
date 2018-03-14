@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static ArrayList<Traseu> traseuList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private TraseuAdapter mAdapter;
+    public static TraseuAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
