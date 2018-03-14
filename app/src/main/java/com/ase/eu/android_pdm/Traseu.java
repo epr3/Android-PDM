@@ -1,30 +1,9 @@
 package com.ase.eu.android_pdm;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Traseu implements Parcelable {
-
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public Traseu createFromParcel(Parcel in) {
-            return new Traseu(in);
-        }
-
-        public Traseu[] newArray(int size) {
-            return new Traseu[size];
-        }
-    };
-
-    public Traseu(Parcel in){
-        this.denumire = in.readString();
-        this.dataStart =  (Date) in.readSerializable();
-        this.dataFinal =  (Date) in.readSerializable();
-        this.distanta = in.readInt();
-        this.listaPuncte = (ArrayList<Punct>)in.readSerializable();
-    }
+public class Traseu {
 
     private String denumire;
     private Date dataStart;
@@ -79,19 +58,4 @@ public class Traseu implements Parcelable {
         this.distanta = distanta;
         this.listaPuncte = listaPuncte;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(denumire);
-        dest.writeSerializable(dataStart);
-        dest.writeSerializable(dataFinal);
-        dest.writeInt(distanta);
-        dest.writeSerializable(listaPuncte);
-    }
-
 }
