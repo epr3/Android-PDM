@@ -18,19 +18,20 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import static com.ase.eu.android_pdm.MainActivity.traseuList;
 
-public class AddTraseuActivity extends AppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+public class AddTraseuActivity extends AppCompatActivity {
 
     public static final String TAG = AddTraseuActivity.class.getSimpleName();
 
@@ -41,10 +42,8 @@ public class AddTraseuActivity extends AppCompatActivity implements
     Traseu traseu = null;
     Date dataStart = null;
 
-    private GoogleApiClient googleApiClient;
-    private Location location;
-
-    LocationRequest locationRequest;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationCallback locationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +54,19 @@ public class AddTraseuActivity extends AppCompatActivity implements
         Button stop = findViewById(R.id.stop);
         final TextInputLayout denumireTextLayout = findViewById(R.id.denumire);
 
-        googleApiClient = new GoogleApiClient.Builder(AddTraseuActivity.this)
-                .addConnectionCallbacks(AddTraseuActivity.this)
-                .addConnectionCallbacks(AddTraseuActivity.this)
-                .addApi(LocationServices.API)
-                .build();
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                Location location = locationResult.getLastLocation();
+
+                if (location != null) {
+                    Toast.makeText(AddTraseuActivity.this, "Latitude: "
+                            + location.getLatitude() + ", " + "Longitude: " + location.getLongitude(), Toast.LENGTH_SHORT)
+                            .show();
+                    listaPuncte.add(new Punct(location.getLatitude(), location.getLongitude()));
+                }
+            }
+        };
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,104 +102,41 @@ public class AddTraseuActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onConnected(Bundle bundle) {
-        Log.d(TAG, "Connected");
-
-        locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setSmallestDisplacement(5);
-
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d(TAG, "Connection suspended!");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "Connection failed!");
-
-        if (connectionResult.hasResolution()) {
-            try {
-                connectionResult.startResolutionForResult(AddTraseuActivity.this, REQUEST_CODE);
-            } catch (Exception e) {
-                Log.d(TAG, e.getStackTrace().toString());
-            }
-        } else {
-            Toast.makeText(this, "Google Play Services are not available", Toast.LENGTH_LONG)
-                    .show();
-            finish();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startLocationUpdate();
+                } else {
+                    Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE && requestCode == RESULT_OK) {
-            googleApiClient.connect();
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (googleApiClient != null) {
-            googleApiClient.connect();
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            listaPuncte.add(new Punct(location.getLatitude(), location.getLongitude()));
-        }
-        Toast.makeText(this, "Location updated" + listaPuncte.size(), Toast.LENGTH_LONG)
-                .show();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
-        fusedLocationProviderApi.removeLocationUpdates(googleApiClient, AddTraseuActivity.this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        googleApiClient.disconnect();
     }
 
     // Custom Methods
 
+    private LocationRequest getLocationRequest() {
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return locationRequest;
+    }
+
     private void startLocationUpdate() {
 
-        FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
-
-        if (googleApiClient.isConnected()) {
-            if (ActivityCompat.checkSelfPermission(AddTraseuActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(AddTraseuActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(AddTraseuActivity.this,
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                        1);
-                return;
-            }
-            fusedLocationProviderApi.requestLocationUpdates(googleApiClient, locationRequest, AddTraseuActivity.this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
         } else {
-            googleApiClient.connect();
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+            fusedLocationProviderClient.requestLocationUpdates(getLocationRequest(), locationCallback, null);
         }
     }
 
     private void stopLocationUpdate() {
-        FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
-        fusedLocationProviderApi.removeLocationUpdates(googleApiClient, AddTraseuActivity.this);
+       fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
 
