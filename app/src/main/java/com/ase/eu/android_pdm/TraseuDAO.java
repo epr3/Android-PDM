@@ -14,7 +14,11 @@ public interface TraseuDAO {
     @Insert
     void insert(Traseu traseu);
 
-    @Query("SELECT * FROM traseu")
+    @Insert
+    void insertWithPuncte(Traseu traseu, List<Punct> listaPuncte);
+
+
+    @Query("SELECT * FROM traseu t JOIN punct p ON t.id=p.traseuId")
     List<TraseuPuncte> getAllTraseePuncte();
 
 }

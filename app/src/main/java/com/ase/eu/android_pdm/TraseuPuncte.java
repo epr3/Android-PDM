@@ -8,10 +8,10 @@ import java.util.List;
 
 public class TraseuPuncte {
     @Embedded
-    Traseu traseu;
+    public Traseu traseu;
 
-    @Relation(parentColumn = "id", entityColumn = "traseuId")
-    List<Punct> listaPuncte;
+    @Relation(parentColumn = "id", entityColumn = "traseuId", entity = Punct.class)
+    public List<Punct> listaPuncte;
 
     public Traseu getTraseu() {
         return traseu;

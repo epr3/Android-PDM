@@ -14,6 +14,9 @@ public interface PunctDAO {
     @Insert
     void insertAll(List<Punct> listaPuncte);
 
+    @Insert
+    void insertPuncteForTraseu(Traseu traseu, List<Punct> listaPuncte);
+
     @Query("SELECT * FROM punct")
     List<Punct> getListaPuncte();
 

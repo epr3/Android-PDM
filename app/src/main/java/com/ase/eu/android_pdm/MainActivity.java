@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -102,11 +103,16 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             Traseu traseu = (Traseu) data.getSerializableExtra("traseu");
+
             TraseuPuncte traseuPuncte = new TraseuPuncte();
             traseuPuncte.setTraseu(traseu);
             traseuPuncte.setListaPuncte(traseu.getListaPuncte());
-            TraseuDatabase.getInstance(getApplicationContext()).getTraseuDAO().insert(traseu);
+            Log.i("Numar", traseu.getListaPuncte().size() + "");
             traseuList.add(traseuPuncte);
+            for(Punct p : traseu.getListaPuncte()) {
+                p.setTraseuId(traseuList.size());
+            }
+            TraseuDatabase.getInstance(getApplicationContext()).getTraseuDAO().insertWithPuncte(traseuPuncte.getTraseu(), traseuPuncte.getListaPuncte());
             mAdapter.notifyItemInserted(traseuList.size());
         }
     }
