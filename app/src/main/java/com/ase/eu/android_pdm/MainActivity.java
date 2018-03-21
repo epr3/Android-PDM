@@ -16,10 +16,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private ArrayList<Traseu> traseuList = new ArrayList<>();
+    private List<TraseuPuncte> traseuList = new ArrayList<>();
     private RecyclerView recyclerView;
     private TraseuAdapter mAdapter;
     private static int ADD_TRASEU_REQUEST_CODE = 5;
@@ -30,6 +31,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        traseuList = TraseuDatabase.getInstance(getApplicationContext()).getTraseuDAO().getAllTraseePuncte();
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +102,11 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             Traseu traseu = (Traseu) data.getSerializableExtra("traseu");
-            traseuList.add(traseu);
+            TraseuPuncte traseuPuncte = new TraseuPuncte();
+            traseuPuncte.setTraseu(traseu);
+            traseuPuncte.setListaPuncte(traseu.getListaPuncte());
+            TraseuDatabase.getInstance(getApplicationContext()).getTraseuDAO().insert(traseu);
+            traseuList.add(traseuPuncte);
             mAdapter.notifyItemInserted(traseuList.size());
         }
     }

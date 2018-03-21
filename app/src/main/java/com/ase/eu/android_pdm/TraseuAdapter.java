@@ -6,12 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 class TraseuAdapter extends RecyclerView.Adapter<TraseuAdapter.ViewHolder> {
-    private ArrayList<Traseu> lista;
+    private List<TraseuPuncte> lista;
 
-    public TraseuAdapter(ArrayList<Traseu> lista) {
+    public TraseuAdapter(List<TraseuPuncte> lista) {
         this.lista = lista;
     }
 
@@ -19,10 +19,10 @@ class TraseuAdapter extends RecyclerView.Adapter<TraseuAdapter.ViewHolder> {
         public TextView denumire, dataStart, dataFinal, distanta;
         public ViewHolder(final View v) {
             super(v);
-            denumire = (TextView) v.findViewById(R.id.denumire);
-            dataStart = (TextView) v.findViewById(R.id.dataStart);
-            dataFinal = (TextView) v.findViewById(R.id.dataFinal);
-            distanta = (TextView) v.findViewById(R.id.distanta);
+            denumire = v.findViewById(R.id.denumire);
+            dataStart = v.findViewById(R.id.dataStart);
+            dataFinal = v.findViewById(R.id.dataFinal);
+            distanta = v.findViewById(R.id.distanta);
         }
     }
 
@@ -36,11 +36,13 @@ class TraseuAdapter extends RecyclerView.Adapter<TraseuAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(TraseuAdapter.ViewHolder holder, int position) {
-        Traseu traseu = lista.get(position);
-        holder.denumire.setText(traseu.getDenumire());
-        holder.dataFinal.setText(traseu.getDataFinal().toString());
-        holder.dataStart.setText(traseu.getDataStart().toString());
-        holder.distanta.setText(traseu.getListaPuncte().size() + " puncte");
+        TraseuPuncte traseu = lista.get(position);
+        holder.denumire.setText(traseu.getTraseu().getDenumire());
+        holder.dataFinal.setText(traseu.getTraseu().getDataFinal().toString());
+        holder.dataStart.setText(traseu.getTraseu().getDataStart().toString());
+        holder.distanta.setText((traseu.getTraseu().getListaPuncte() != null
+                ? traseu.getTraseu().getListaPuncte().size()
+                : 0) + " puncte");
     }
 
     @Override

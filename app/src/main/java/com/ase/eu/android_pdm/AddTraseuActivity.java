@@ -16,8 +16,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class AddTraseuActivity extends AppCompatActivity {
 
@@ -41,7 +41,7 @@ public class AddTraseuActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Bundle bundle = intent.getBundleExtra("bundle");
-                ArrayList<Punct> listaPuncte = (ArrayList<Punct>) bundle.getSerializable("listaPuncte");
+                List<Punct> listaPuncte = (List<Punct>) bundle.getSerializable("listaPuncte");
                 traseu.setDataFinal(new Date());
                 traseu.setListaPuncte(listaPuncte);
                 traseu.setDistanta(listaPuncte.size());
@@ -50,6 +50,7 @@ public class AddTraseuActivity extends AppCompatActivity {
 
                 finishIntent.putExtra("traseu", traseu);
                 AddTraseuActivity.this.setResult(RESULT_OK, finishIntent);
+
                 context.unregisterReceiver(this);
                 AddTraseuActivity.this.finish();
             }

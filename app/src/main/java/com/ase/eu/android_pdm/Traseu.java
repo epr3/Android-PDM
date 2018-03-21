@@ -1,22 +1,36 @@
 package com.ase.eu.android_pdm;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+@Entity(tableName = "traseu")
 public class Traseu implements Serializable{
+
+   @PrimaryKey(autoGenerate = true)
+    private Integer id;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     private String denumire;
     private Date dataStart;
     private Date dataFinal;
     private Integer distanta;
-    private ArrayList<Punct> listaPuncte;
 
-    public ArrayList<Punct> getListaPuncte() {
+    @Ignore
+    private List<Punct> listaPuncte;
+
+    public List<Punct> getListaPuncte() {
         return listaPuncte;
     }
 
-    public void setListaPuncte(ArrayList<Punct> listaPuncte) {
+    public void setListaPuncte(List<Punct> listaPuncte) {
         this.listaPuncte = listaPuncte;
     }
 
@@ -48,11 +62,16 @@ public class Traseu implements Serializable{
         return distanta;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public void setDistanta(Integer distanta) {
         this.distanta = distanta;
     }
 
-    public Traseu(String denumire, Date dataStart, Date dataFinal, Integer distanta, ArrayList<Punct> listaPuncte){
+    public Traseu(Integer id, String denumire, Date dataStart, Date dataFinal, Integer distanta, List<Punct> listaPuncte){
+        this.id = id;
         this.denumire = denumire;
         this.dataStart = dataStart;
         this.dataFinal = dataFinal;
