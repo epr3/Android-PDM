@@ -13,15 +13,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
                                                         childColumns = "traseuId",
                                                         onDelete = CASCADE))
 public class Punct implements Serializable{
-    public int getId() {
-        return id;
-    }
-
-    public int getTraseuId() {
-        return traseuId;
-    }
-
-    @PrimaryKey(autoGenerate = true) private int id;
+       @PrimaryKey(autoGenerate = true) private int id;
     double longitude;
     double latitude;
     private int traseuId;
@@ -54,6 +46,15 @@ public class Punct implements Serializable{
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getTraseuId() {
+        return traseuId;
+    }
+
 
     public Punct(){
 

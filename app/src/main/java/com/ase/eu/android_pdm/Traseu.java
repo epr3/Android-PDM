@@ -13,11 +13,6 @@ public class Traseu implements Serializable{
 
    @PrimaryKey(autoGenerate = true)
     private Integer id;
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     private String denumire;
     private Date dataStart;
     private Date dataFinal;
@@ -66,12 +61,15 @@ public class Traseu implements Serializable{
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public void setDistanta(Integer distanta) {
         this.distanta = distanta;
     }
 
-    public Traseu(Integer id, String denumire, Date dataStart, Date dataFinal, Integer distanta, List<Punct> listaPuncte){
-        this.id = id;
+    public Traseu(String denumire, Date dataStart, Date dataFinal, Integer distanta, List<Punct> listaPuncte){
         this.denumire = denumire;
         this.dataStart = dataStart;
         this.dataFinal = dataFinal;
