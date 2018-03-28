@@ -3,6 +3,7 @@ package com.ase.eu.android_pdm;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.database.Cursor;
 
 import java.util.List;
 
@@ -17,8 +18,9 @@ public interface TraseuDAO {
     @Insert
     void insertWithPuncte(Traseu traseu, List<Punct> listaPuncte);
 
-
     @Query("SELECT * FROM traseu t JOIN punct p ON t.id=p.traseuId")
     List<TraseuPuncte> getAllTraseePuncte();
 
+    @Query("SELECT * FROM traseu")
+    public Cursor selectCursorTrasee();
 }
